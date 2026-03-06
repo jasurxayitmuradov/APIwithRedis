@@ -3,8 +3,9 @@ import requests
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from dotenv import load_dotenv
 from django.core.cache import cache
-
+load_dotenv()
 @api_view(['GET'])
 def get_weather(request, city):
     # 1. Avval keshdan qidiramiz
@@ -16,8 +17,9 @@ def get_weather(request, city):
 
     # 2. Agar keshda bo'lmasa, API'dan olamiz
     api_key = os.getenv("WEATHER_API_KEY")
+    
     url = f"https://weather.visualcrossing.com/VisualCrossingWebServices/rest/services/timeline/{city}?unitGroup=metric&key={api_key}&contentType=json"
-
+   
     try:
         response = requests.get(url)
         if response.status_code == 200:
@@ -26,6 +28,6 @@ def get_weather(request, city):
             cache.set(cache_key, weather_data, timeout=43200) 
             return Response({"source": "api", "data": weather_data})
         
-        return Response({"error": "Shahar topilmadi"}, status=status.HTTP_404_NOT_FOUND)
+        return Response({"error": "Shahar topilmadi", "link: ":f"{url}" , "api_key":api_key}, status=status.HTTP_404_NOT_FOUND)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
