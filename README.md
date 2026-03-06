@@ -137,3 +137,5 @@ python manage.py check
 # Tests
 python manage.py test
 ```
+
+link to the project: https://roadmap.sh/projects/weather-api-wrapper-service
